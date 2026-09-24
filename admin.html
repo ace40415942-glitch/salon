@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>إدارة صالون حسام</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#14110f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800;900&family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+  <!-- تسجيل الدخول -->
+  <section class="login" id="login">
+    <form class="login-card" id="loginForm">
+      <p class="login-mark">حسام</p>
+      <p class="login-sub">لوحة الإدارة</p>
+      <label class="field"><span>الرمز</span><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" dir="ltr" required></label>
+      <button class="btn btn-brass btn-block" type="submit"><span>ادخل</span><i data-icon="arrow-left"></i></button>
+      <p class="form-msg" id="loginMsg" role="alert"></p>
+      <a class="login-back" href="./">رجوع للموقع</a>
+    </form>
+  </section>
+
+  <!-- اللوحة -->
+  <div class="app" id="app" hidden>
+    <header class="a-top">
+      <a class="brand" href="./" title="فتح الموقع">حسام<small>ADMIN</small></a>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="bookings" aria-selected="true"><i data-icon="calendar-event"></i><span>الحجوزات</span></button>
+        <button role="tab" data-tab="services"><i data-icon="cash"></i><span>الأسعار</span></button>
+        <button role="tab" data-tab="hours"><i data-icon="clock"></i><span>الدوام</span></button>
+        <button role="tab" data-tab="photos"><i data-icon="photo"></i><span>الصور</span></button>
+        <button role="tab" data-tab="settings"><i data-icon="settings"></i><span>الإعدادات</span></button>
+      </nav>
+      <button class="icon-btn" id="logout" title="خروج" aria-label="خروج"><i data-icon="logout"></i></button>
+    </header>
+
+    <main class="a-main">
+      <p class="demo-note" id="demoNote" hidden>وضع تجريبي: كل شي محفوظ على هاد الجهاز بس. اربط Supabase (شوف README) حتى تشوف حجوزات الزباين من كل الأجهزة.</p>
+
+      <!-- الحجوزات -->
+      <section class="panel" data-panel="bookings">
+        <div class="stats" id="stats"></div>
+        <div class="day-bar">
+          <button class="icon-btn" id="prevDay" aria-label="اليوم السابق"><i data-icon="chevron-right"></i></button>
+          <div class="day-bar-mid">
+            <h2 id="dayTitle"></h2>
+            <input type="date" id="dayPick" aria-label="اختار يوم">
+          </div>
+          <button class="icon-btn" id="nextDay" aria-label="اليوم التالي"><i data-icon="chevron-left"></i></button>
+          <button class="btn btn-ghost btn-sm" id="todayBtn">اليوم</button>
+          <button class="btn btn-brass btn-sm" id="addBookingBtn"><i data-icon="plus"></i><span>حجز / تسكير وقت</span></button>
+        </div>
+        <ol class="agenda" id="agenda"></ol>
+      </section>
+
+      <!-- الأسعار -->
+      <section class="panel" data-panel="services" hidden>
+        <div class="panel-head">
+          <h2>الخدمات والأسعار</h2>
+          <button class="btn btn-brass btn-sm" id="addService"><i data-icon="plus"></i><span>خدمة جديدة</span></button>
+        </div>
+        <p class="hint">السعر بالشيكل (₪). المدّة بتحدد كم وقت بتحجز الخدمة من الجدول.</p>
+        <div class="svc-list" id="svcList"></div>
+      </section>
+
+      <!-- الدوام -->
+      <section class="panel" data-panel="hours" hidden>
+        <div class="panel-head"><h2>ساعات الدوام</h2><button class="btn btn-brass btn-sm" id="saveHours"><i data-icon="check"></i><span>احفظ</span></button></div>
+        <div class="hours-edit" id="hoursEdit"></div>
+        <div class="grid-3">
+          <label class="field"><span>كل كم دقيقة في دور؟</span>
+            <select id="slotStep"><option value="15">15 دقيقة</option><option value="20">20 دقيقة</option><option value="30">30 دقيقة</option><option value="45">45 دقيقة</option><option value="60">ساعة</option></select></label>
+          <label class="field"><span>الحجز مفتوح لكم يوم لقدّام؟</span><input id="horizon" type="number" min="1" max="60"></label>
+          <label class="field"><span>أقل وقت قبل الدور (دقائق)</span><input id="notice" type="number" min="0" max="1440" step="5"></label>
+        </div>
+        <h3 class="sub-h">أيام عطلة (تواريخ محددة)</h3>
+        <div class="daysoff-add">
+          <input type="date" id="offDate" aria-label="تاريخ العطلة">
+          <button class="btn btn-ghost btn-sm" id="addOff"><i data-icon="ban"></i><span>سكّر هاد اليوم</span></button>
+        </div>
+        <ul class="daysoff" id="daysOff"></ul>
+        <p class="form-msg" id="hoursMsg" role="status"></p>
+      </section>
+
+      <!-- الصور -->
+      <section class="panel" data-panel="photos" hidden>
+        <div class="panel-head">
+          <h2>صور من الشغل</h2>
+          <label class="btn btn-brass btn-sm" for="photoInput"><i data-icon="upload"></i><span>رفع صور</span></label>
+          <input type="file" id="photoInput" accept="image/*" multiple hidden>
+        </div>
+        <p class="hint">الصور بتنضغط تلقائياً قبل الرفع. بتظهر بقسم «من الشغل» بالموقع (القسم مخفي لحد ما تضيف أول صورة).</p>
+        <div class="photo-grid" id="photoGrid"></div>
+        <p class="form-msg" id="photoMsg" role="status"></p>
+      </section>
+
+      <!-- الإعدادات -->
+      <section class="panel" data-panel="settings" hidden>
+        <div class="panel-head"><h2>معلومات الصالون</h2><button class="btn btn-brass btn-sm" id="saveSettings"><i data-icon="check"></i><span>احفظ</span></button></div>
+        <div class="grid-2" id="settingsForm">
+          <label class="field"><span>جملة تحت الاسم</span><input data-k="tagline" maxlength="80"></label>
+          <label class="field"><span>رقم التلفون</span><input data-k="phone" dir="ltr" inputmode="tel" placeholder="05X-XXX-XXXX"></label>
+          <label class="field"><span>واتساب (إذا غير عن التلفون)</span><input data-k="whatsapp" dir="ltr" inputmode="tel" placeholder="05X-XXX-XXXX"></label>
+          <label class="field"><span>انستغرام</span><input data-k="instagram" dir="ltr" placeholder="@username"></label>
+          <label class="field"><span>تيك توك</span><input data-k="tiktok" dir="ltr" placeholder="@username"></label>
+          <label class="field"><span>العنوان</span><input data-k="address" maxlength="120"></label>
+          <label class="field field-wide"><span>رابط Google Maps (اختياري)</span><input data-k="maps_url" dir="ltr" placeholder="https://maps.app.goo.gl/..."></label>
+          <label class="field"><span>أكثر عدد حجوزات فعّالة لنفس الرقم</span><input data-k="max_active_per_phone" type="number" min="1" max="10"></label>
+        </div>
+        <p class="form-msg" id="settingsMsg" role="status"></p>
+
+        <h3 class="sub-h">تغيير رمز الدخول</h3>
+        <form class="grid-3" id="pinForm">
+          <label class="field"><span>الرمز الجديد</span><input id="newPin" type="password" dir="ltr" minlength="4" autocomplete="new-password" required></label>
+          <label class="field"><span>أعد الرمز</span><input id="newPin2" type="password" dir="ltr" minlength="4" autocomplete="new-password" required></label>
+          <button class="btn btn-ghost" type="submit"><i data-icon="lock"></i><span>غيّر الرمز</span></button>
+        </form>
+        <p class="form-msg" id="pinMsg" role="status"></p>
+      </section>
+    </main>
+  </div>
+
+  <!-- حجز يدوي / تسكير وقت -->
+  <dialog class="a-dlg" id="bkDlg">
+    <form method="dialog" class="a-dlg-in" id="bkForm">
+      <h3>إضافة للجدول</h3>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="kind" value="confirmed" checked><span>حجز زبون</span></label>
+        <label><input type="radio" name="kind" value="blocked"><span>تسكير وقت</span></label>
+      </div>
+      <div class="grid-2">
+        <label class="field"><span>اليوم</span><input type="date" id="bkDay" required></label>
+        <label class="field" data-only="confirmed"><span>الخدمة</span><select id="bkSvc"></select></label>
+        <label class="field"><span>من</span><input type="time" id="bkFrom" step="300" required></label>
+        <label class="field"><span>لحد</span><input type="time" id="bkTo" step="300" required></label>
+        <label class="field" data-only="confirmed"><span>الاسم</span><input id="bkName" maxlength="60"></label>
+        <label class="field" data-only="confirmed"><span>التلفون</span><input id="bkPhone" dir="ltr" inputmode="tel"></label>
+        <label class="field field-wide"><span>ملاحظة</span><input id="bkNote" maxlength="200"></label>
+      </div>
+      <p class="form-msg" id="bkMsg" role="alert"></p>
+      <div class="a-dlg-actions">
+        <button class="btn btn-ghost btn-sm" value="cancel" formnovalidate>إلغاء</button>
+        <button class="btn btn-brass btn-sm" id="bkSave" value="save"><i data-icon="check"></i><span>احفظ</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

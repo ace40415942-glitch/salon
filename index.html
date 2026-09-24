@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>صالون حسام | احجز دورك</title>
+  <meta name="description" content="صالون حسام للشباب. قصّات، فيد، ودقن. احجز دورك أونلاين وشوف الأوقات الفاضية مباشرة.">
+  <meta name="theme-color" content="#14110f">
+  <meta property="og:title" content="صالون حسام">
+  <meta property="og:description" content="احجز دورك أونلاين وشوف الأوقات الفاضية مباشرة.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800;900&family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
+</head>
+<body class="is-intro">
+
+  <canvas id="pole" aria-hidden="true"></canvas>
+  <div class="pole-fallback" aria-hidden="true"><div class="pf-cap"></div><div class="pf-tube"><i></i></div><div class="pf-base"></div></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="curtain" aria-hidden="true"></div>
+
+  <!-- ========== الافتتاحية ========== -->
+  <section class="intro" id="intro" aria-label="افتتاحية">
+    <div class="intro-mark">
+            <h1 class="intro-name"><span class="nm">حسام</span></h1>
+      <p class="intro-tag">HOSSAM <b>·</b> BARBER</p>
+      <button class="enter" id="enter" type="button"><span>ادخل</span></button>
+    </div>
+    <button class="skip" id="skip" type="button">تخطّي</button>
+  </section>
+
+  <!-- ========== الهيدر ========== -->
+  <header class="nav" id="nav">
+    <a class="brand" href="#top" aria-label="صالون حسام، للأعلى">حسام<small>BARBER</small></a>
+    <nav class="nav-links" aria-label="أقسام الموقع">
+      <a href="#menu">الأسعار</a>
+      <a href="#ritual">الطريقة</a>
+      <a href="#gallery" data-gallery-link hidden>الشغل</a>
+      <a href="#visit">الدوام</a>
+    </nav>
+    <a class="btn btn-brass btn-sm" href="#book">احجز دورك</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ========== الهيرو ========== -->
+    <section class="hero" id="hero">
+      <div class="hero-copy">
+        <p class="status" id="openStatus" hidden></p>
+        <h2 class="hero-title reveal-words">قصّة نظيفة،<br>حضور <em>أنظف</em>.</h2>
+        <p class="hero-sub" id="heroSub">صالون شبابي. احجز دورك من هون وشوف الساعات الفاضية قبل ما تطلع من البيت.</p>
+        <div class="hero-cta">
+          <a class="btn btn-brass" href="#book"><span>احجز دورك</span><i data-icon="arrow-left"></i></a>
+          <a class="btn btn-ghost" href="#menu">شوف الأسعار</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== الأسعار ========== -->
+    <section class="menu" id="menu">
+      <div class="menu-head">
+        <h2 class="sec-title reveal-words">الأسعار <em>بوضوح</em></h2>
+        <p class="sec-sub">كل الأسعار بالشيكل. اضغط على أي خدمة وبنحجزلك فيها مباشرة.</p>
+      </div>
+      <ol class="price-list" id="priceList" aria-live="polite">
+        <li class="price-skel"></li><li class="price-skel"></li><li class="price-skel"></li>
+      </ol>
+    </section>
+
+    <!-- ========== الطريقة (سكرول أفقي مثبّت) ========== -->
+    <section class="ritual" id="ritual">
+      <div class="ritual-pin">
+        <div class="ritual-head">
+          <h2 class="sec-title">مش بس <em>قصّة</em></h2>
+          <div class="ritual-rail"><i id="ritualBar"></i></div>
+        </div>
+        <div class="ritual-track" id="ritualTrack">
+          <article class="step">
+            <span class="step-bg" aria-hidden="true">نسمع</span>
+            <h3>بنسمعك أول</h3>
+            <p>شو بدك، شو بيليق على شكل وجهك، وكيف بتصفّف شعرك الصبح. دقيقتين حكي بيوفّروا عليك قصّة غلط.</p>
+          </article>
+          <article class="step">
+            <span class="step-bg" aria-hidden="true">غسيل</span>
+            <h3>غسيل ومنشفة سخنة</h3>
+            <p>الشعر النظيف بيتقص أدق. والمنشفة السخنة قبل الدقن بتفتح المسام وبتخلّي الموس ينزل ناعم.</p>
+          </article>
+          <article class="step">
+            <span class="step-bg" aria-hidden="true">قصّ</span>
+            <h3>القصّ على مهل</h3>
+            <p>فيد مدرّج من الصفر، مقص على الطول، وتحديد بالموس. ما في استعجال، لأنه دورك محجوز إلك.</p>
+          </article>
+          <article class="step">
+            <span class="step-bg" aria-hidden="true">ستايل</span>
+            <h3>اللمسة الأخيرة</h3>
+            <p>استشوار وستايل، ونعلّمك كيف ترجّعه لحالك بالبيت. بتطلع وأنت عارف شو تعمل بكرا.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== المعرض (بيظهر لما الإدارة تضيف صور) ========== -->
+    <section class="gallery" id="gallery" hidden>
+      <h2 class="sec-title reveal-words">من <em>الشغل</em></h2>
+      <div class="gallery-row" id="galleryRow"></div>
+    </section>
+
+    <!-- ========== الحجز ========== -->
+    <section class="book" id="book">
+      <div class="echo" aria-hidden="true">
+        <span>احجز كرسيك</span><span>احجز كرسيك</span><span>احجز كرسيك</span><span>احجز كرسيك</span>
+      </div>
+      <h2 class="sr-only">احجز دورك</h2>
+
+      <div class="book-grid">
+        <form class="book-flow" id="bookForm" novalidate>
+          <fieldset class="bstep" id="stepService">
+            <legend><b>١</b> شو بدك تعمل؟</legend>
+            <div class="svc-grid" id="svcGrid" role="radiogroup" aria-label="الخدمة"></div>
+          </fieldset>
+
+          <fieldset class="bstep" id="stepDay" disabled>
+            <legend><b>٢</b> أي يوم؟</legend>
+            <div class="day-strip-wrap">
+              <button class="day-nav" type="button" data-dir="1" aria-label="الأيام السابقة"><i data-icon="chevron-right"></i></button>
+              <div class="day-strip" id="dayStrip" role="radiogroup" aria-label="اليوم"></div>
+              <button class="day-nav" type="button" data-dir="-1" aria-label="الأيام التالية"><i data-icon="chevron-left"></i></button>
+            </div>
+          </fieldset>
+
+          <fieldset class="bstep" id="stepTime" disabled>
+            <legend><b>٣</b> أي ساعة؟ <small id="slotHint"></small></legend>
+            <div class="slots" id="slots" role="radiogroup" aria-label="الوقت" aria-live="polite"></div>
+            <p class="legend-row"><span class="lg lg-free">فاضي</span><span class="lg lg-taken">محجوز</span></p>
+          </fieldset>
+
+          <fieldset class="bstep" id="stepInfo" disabled>
+            <legend><b>٤</b> مين إنت؟</legend>
+            <div class="fields">
+              <label class="field"><span>الاسم</span><input id="fName" name="name" autocomplete="name" maxlength="60" required></label>
+              <label class="field"><span>رقم التلفون</span><input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="05X-XXX-XXXX" maxlength="18" required></label>
+              <label class="field field-wide"><span>ملاحظة (اختياري)</span><input id="fNote" name="note" maxlength="200" placeholder="مثلاً: بدي نفس القصّة الماضية"></label>
+            </div>
+          </fieldset>
+
+          <p class="form-msg" id="formMsg" role="alert"></p>
+        </form>
+
+        <!-- التذكرة: ملخص الحجز -->
+        <aside class="ticket" id="ticket" aria-label="ملخّص الحجز">
+          <div class="ticket-top">
+            <span class="ticket-brand">حسام</span>
+            <span class="ticket-no" id="ticketNo">دورك</span>
+          </div>
+          <dl class="ticket-rows">
+            <div><dt>الخدمة</dt><dd id="tService">اختار خدمة</dd></div>
+            <div><dt>اليوم</dt><dd id="tDay">اختار يوم</dd></div>
+            <div><dt>الساعة</dt><dd id="tTime">اختار ساعة</dd></div>
+            <div><dt>المدّة</dt><dd id="tDur">-</dd></div>
+          </dl>
+          <div class="ticket-perf" aria-hidden="true"></div>
+          <div class="ticket-total"><span>المبلغ</span><strong id="tPrice">-</strong></div>
+          <button class="btn btn-brass btn-block" id="confirmBtn" type="submit" form="bookForm" disabled>
+            <span>ثبّت الحجز</span><i data-icon="check"></i>
+          </button>
+          <div class="stamp" id="stamp" aria-hidden="true">محجوز</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========== بعد الحجز ========== -->
+    <dialog class="done" id="doneDlg" aria-labelledby="doneTitle">
+      <div class="done-inner">
+        <p class="done-kicker">تمام، دورك محجوز</p>
+        <h3 id="doneTitle" class="done-title"></h3>
+        <p class="done-when" id="doneWhen"></p>
+        <div class="done-code"><span>كود الحجز</span><strong id="doneCode"></strong><button type="button" class="icon-btn" id="copyCode" aria-label="نسخ الكود"><i data-icon="copy"></i></button></div>
+        <p class="done-note">احتفظ بالكود. بتحتاجه مع رقمك إذا بدك تلغي.</p>
+        <div class="done-actions">
+          <a class="btn btn-brass" id="doneWa" target="_blank" rel="noopener"><i data-icon="brand-whatsapp"></i><span>بلّغ الصالون</span></a>
+          <button class="btn btn-ghost" type="button" id="doneIcs"><i data-icon="calendar-plus"></i><span>ضيف للتقويم</span></button>
+        </div>
+        <button class="done-close" type="button" id="doneClose">سكّر</button>
+      </div>
+    </dialog>
+
+    <!-- ========== الدوام والتواصل ========== -->
+    <section class="visit" id="visit">
+      <div class="visit-hours">
+        <h2 class="sec-title reveal-words">الدوام</h2>
+        <table class="hours" id="hoursTable"></table>
+      </div>
+      <div class="visit-info">
+        <p class="visit-addr" id="visitAddr" hidden></p>
+        <div class="socials" id="socials"></div>
+        <details class="cancel">
+          <summary>بدك تلغي حجز؟</summary>
+          <form id="cancelForm" class="cancel-form" novalidate>
+            <label class="field"><span>كود الحجز</span><input id="cCode" dir="ltr" maxlength="8" autocomplete="off" required></label>
+            <label class="field"><span>رقم التلفون</span><input id="cPhone" type="tel" dir="ltr" inputmode="tel" maxlength="18" required></label>
+            <button class="btn btn-ghost" type="submit">إلغاء الحجز</button>
+            <p class="form-msg" id="cancelMsg" role="alert"></p>
+          </form>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot-mark" aria-hidden="true">حسام</p>
+    <div class="foot-row">
+      <span>© <span id="year"></span> صالون حسام</span>
+      <span>تصميم وتطوير Ace404</span>
+      <a href="admin.html" class="foot-admin"><i data-icon="lock"></i>الإدارة</a>
+    </div>
+  </footer>
+
+  <div class="demo-bar" id="demoBar" hidden>وضع تجريبي: الحجوزات محفوظة على هاد الجهاز بس لحد ما تنربط قاعدة البيانات.<button type="button" aria-label="إخفاء"><i data-icon="x"></i></button></div>
+
+  <script type="module" src="js/site.js"></script>
+</body>
+</html>
