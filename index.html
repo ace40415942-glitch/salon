@@ -37,7 +37,7 @@
     <a class="brand" href="#top" aria-label="صالون حسام، للأعلى">حسام<small>BARBER</small></a>
     <nav class="nav-links" aria-label="أقسام الموقع">
       <a href="#menu">الأسعار</a>
-      <a href="#ritual">الطريقة</a>
+      <a href="#guard">شو رقمك؟</a>
       <a href="#gallery" data-gallery-link hidden>الشغل</a>
       <a href="#visit">الدوام</a>
     </nav>
@@ -70,36 +70,26 @@
       </ol>
     </section>
 
-    <!-- ========== الطريقة (سكرول أفقي مثبّت) ========== -->
-    <section class="ritual" id="ritual">
-      <div class="ritual-pin">
-        <div class="ritual-head">
-          <h2 class="sec-title">مش بس <em>قصّة</em></h2>
-          <div class="ritual-rail"><i id="ritualBar"></i></div>
-        </div>
-        <div class="ritual-track" id="ritualTrack">
-          <article class="step">
-            <span class="step-bg" aria-hidden="true">نسمع</span>
-            <h3>بنسمعك أول</h3>
-            <p>شو بدك، شو بيليق على شكل وجهك، وكيف بتصفّف شعرك الصبح. دقيقتين حكي بيوفّروا عليك قصّة غلط.</p>
-          </article>
-          <article class="step">
-            <span class="step-bg" aria-hidden="true">غسيل</span>
-            <h3>غسيل ومنشفة سخنة</h3>
-            <p>الشعر النظيف بيتقص أدق. والمنشفة السخنة قبل الدقن بتفتح المسام وبتخلّي الموس ينزل ناعم.</p>
-          </article>
-          <article class="step">
-            <span class="step-bg" aria-hidden="true">قصّ</span>
-            <h3>القصّ على مهل</h3>
-            <p>فيد مدرّج من الصفر، مقص على الطول، وتحديد بالموس. ما في استعجال، لأنه دورك محجوز إلك.</p>
-          </article>
-          <article class="step">
-            <span class="step-bg" aria-hidden="true">ستايل</span>
-            <h3>اللمسة الأخيرة</h3>
-            <p>استشوار وستايل، ونعلّمك كيف ترجّعه لحالك بالبيت. بتطلع وأنت عارف شو تعمل بكرا.</p>
-          </article>
+    <!-- ========== شو رقمك؟ (دليل أرقام الماكينة) ========== -->
+    <section class="guard" id="guard">
+      <div class="guard-head">
+        <h2 class="sec-title reveal-words">شو <em>رقمك</em>؟</h2>
+        <p class="sec-sub">رقم مشط الماكينة هو طول الشعر. حرّك المشط وشوف كيف بيطلع الفيد من الجلد لحد الرقم.</p>
+      </div>
+      <div class="guard-stage">
+        <figure class="fade-view">
+          <canvas id="fadeCanvas" aria-hidden="true"></canvas>
+          <figcaption><span>جلد</span><span id="fadeEnd">رقم 2</span></figcaption>
+        </figure>
+        <div class="guard-read" aria-live="polite">
+          <p class="g-num"><span id="gNum">2</span></p>
+          <p class="g-mm"><b id="gMm">6</b> ملم</p>
+          <h3 class="g-name" id="gName"></h3>
+          <p class="g-desc" id="gDesc"></p>
+          <button class="btn btn-ghost btn-sm" type="button" id="gUse"><i data-icon="scissors"></i><span>بدي هاد الرقم</span></button>
         </div>
       </div>
+      <div class="comb" id="comb" role="radiogroup" aria-label="رقم المشط"></div>
     </section>
 
     <!-- ========== المعرض (بيظهر لما الإدارة تضيف صور) ========== -->
@@ -110,10 +100,21 @@
 
     <!-- ========== الحجز ========== -->
     <section class="book" id="book">
-      <div class="echo" aria-hidden="true">
-        <span>احجز كرسيك</span><span>احجز كرسيك</span><span>احجز كرسيك</span><span>احجز كرسيك</span>
+      <div class="book-head">
+        <div>
+          <h2 class="sec-title reveal-words">احجز <em>كرسيك</em></h2>
+          <p class="sec-sub">اختار الخدمة واليوم والساعة. الأوقات المشطوبة محجوزة لغيرك.</p>
+        </div>
+        <div class="board" id="board">
+          <p class="board-label">أقرب دور فاضي <span id="boardFor"></span></p>
+          <div class="board-row">
+            <div class="flaps" id="flaps" dir="ltr" aria-hidden="true"></div>
+            <span class="board-ap" id="boardAp"></span>
+          </div>
+          <p class="board-day" id="boardDay" aria-live="polite">لحظة...</p>
+          <button class="btn btn-brass btn-sm" type="button" id="boardTake" disabled><span>خذ هاد الدور</span><i data-icon="arrow-left"></i></button>
+        </div>
       </div>
-      <h2 class="sr-only">احجز دورك</h2>
 
       <div class="book-grid">
         <form class="book-flow" id="bookForm" novalidate>
@@ -122,7 +123,7 @@
             <div class="svc-grid" id="svcGrid" role="radiogroup" aria-label="الخدمة"></div>
           </fieldset>
 
-          <fieldset class="bstep" id="stepDay" disabled>
+          <fieldset class="bstep" id="stepDay" data-hint="اختار الخدمة أول" disabled>
             <legend><b>٢</b> أي يوم؟</legend>
             <div class="day-strip-wrap">
               <button class="day-nav" type="button" data-dir="1" aria-label="الأيام السابقة"><i data-icon="chevron-right"></i></button>
@@ -131,13 +132,13 @@
             </div>
           </fieldset>
 
-          <fieldset class="bstep" id="stepTime" disabled>
+          <fieldset class="bstep" id="stepTime" data-hint="اختار اليوم أول" disabled>
             <legend><b>٣</b> أي ساعة؟ <small id="slotHint"></small></legend>
             <div class="slots" id="slots" role="radiogroup" aria-label="الوقت" aria-live="polite"></div>
             <p class="legend-row"><span class="lg lg-free">فاضي</span><span class="lg lg-taken">محجوز</span></p>
           </fieldset>
 
-          <fieldset class="bstep" id="stepInfo" disabled>
+          <fieldset class="bstep" id="stepInfo" data-hint="اختار الساعة أول" disabled>
             <legend><b>٤</b> مين إنت؟</legend>
             <div class="fields">
               <label class="field"><span>الاسم</span><input id="fName" name="name" autocomplete="name" maxlength="60" required></label>
@@ -217,6 +218,12 @@
       <a href="admin.html" class="foot-admin"><i data-icon="lock"></i>الإدارة</a>
     </div>
   </footer>
+
+  <div class="mbar" id="mbar" aria-label="ملخّص الحجز">
+    <div class="mbar-info"><b id="mbSvc">اختار خدمة</b><span id="mbWhen">وبعدها اليوم والساعة</span></div>
+    <strong class="mbar-price" id="mbPrice"></strong>
+    <button class="btn btn-brass btn-sm" id="mbConfirm" type="submit" form="bookForm" disabled><span>ثبّت</span></button>
+  </div>
 
   <div class="demo-bar" id="demoBar" hidden>وضع تجريبي: الحجوزات محفوظة على هاد الجهاز بس لحد ما تنربط قاعدة البيانات.<button type="button" aria-label="إخفاء"><i data-icon="x"></i></button></div>
 

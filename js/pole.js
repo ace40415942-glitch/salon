@@ -170,10 +170,12 @@ export function createPole(canvas) {
 
     const d = ease(clamp01(state.dock));
     const halfW = Math.tan((camera.fov * Math.PI) / 360) * far * aspect;
-    const side = aspect > 1.05 ? -halfW * 0.5 : 0;
+    // تابلت وكمبيوتر: العمود على جنب والكلام على الجنب الثاني. موبايل: بالنص ورا الكلام.
+    const wide = w >= 720;
+    const side = wide ? -halfW * (aspect > 1.05 ? 0.5 : 0.52) : 0;
     root.position.x = lerp(0, side, d);
     root.position.y = state.scroll * 3.2;
-    const sc = lerp(1, aspect > 1.05 ? 0.92 : 0.8, d);
+    const sc = lerp(1, wide ? (aspect > 1.05 ? 0.92 : 0.78) : 0.8, d);
     root.scale.setScalar(sc);
     root.rotation.z = lerp(-0.22, 0, e) + state.px * 0.03;
     root.rotation.x = lerp(0.12, 0, e) + state.py * 0.05;

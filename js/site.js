@@ -1,5 +1,6 @@
 import { store, errText } from './store.js';
 import { hydrateIcons, icon } from './icons.js';
+import { initGuard } from './guard.js';
 import { nowIn, addDays, dow, dayNum, monthName, fmtClock, fmtDayLong, hoursFor, buildSlots, DAY_NAMES, hm } from './time.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -52,10 +53,6 @@ try {
 if (!pole) document.body.classList.add('no-webgl');
 
 // ============================================================ الافتتاحية
-const ritual = $('#ritual');
-const track = $('#ritualTrack');
-const bar = $('#ritualBar');
-const echo = $('.echo');
 const canvas = $('#pole');
 let ticking = false;
 const intro = $('#intro');
@@ -137,7 +134,7 @@ function onScroll() {
 
   // العمود يطلع لفوق ويختفي مع نهاية الهيرو
   const heroP = clamp01(y / vh);
-  const fade = 1 - clamp01((heroP - (window.innerWidth < 720 ? 0.12 : 0.3)) / 0.55);
+  const fade = 1 - clamp01((heroP - 0.18) / 0.42);
   if (pole) {
     pole.state.scroll = heroP;
     canvas.style.opacity = fade;
@@ -145,20 +142,6 @@ function onScroll() {
   } else {
     const pf = $('.pole-fallback');
     pf.style.opacity = fade * 0.5;
-  }
-
-  // الطريقة: تحريك أفقي
-  if (!reduced) {
-    const r = ritual.getBoundingClientRect();
-    const p = clamp01(-r.top / (r.height - vh));
-    const overflow = track.scrollWidth - track.clientWidth + 40;
-    track.style.transform = `translate3d(${p * Math.max(0, overflow)}px,0,0)`;
-    bar.style.transform = `scaleX(${p})`;
-
-    // «احجز كرسيك» المتكرر: السطور بتنفرد وإنت نازل
-    const er = echo.getBoundingClientRect();
-    const ep = clamp01(1 - (er.top - vh * 0.2) / (vh * 0.8));
-    echo.style.setProperty('--spread', (-58 + ep * 58).toFixed(1));
   }
 }
 window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
@@ -283,6 +266,7 @@ function selectService(id) {
     if (first) selectDay(first, false);
   } else renderSlots();
   validate();
+  if (boardNext) renderBoard();
 }
 
 function renderServices() {
@@ -358,14 +342,21 @@ function renderSlots() {
 
 function setTicket(id, text) {
   const el = $('#' + id);
-  if (el.textContent === text) return;
-  el.textContent = text;
-  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  if (el.textContent !== text) {
+    el.textContent = text;
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  }
+  // الشريط السفلي على الموبايل والتابلت
+  $('#mbSvc').textContent = B.service ? B.service.name : 'اختار خدمة';
+  $('#mbPrice').textContent = B.service ? `₪${money(B.service.price)}` : '';
+  $('#mbWhen').textContent = !B.service ? 'وبعدها اليوم والساعة'
+    : !B.day ? 'اختار اليوم' : B.slot == null ? `${fmtDayLong(B.day)}، اختار ساعة` : `${fmtDayLong(B.day)}، ${fmtClock(B.slot)}`;
 }
 
 function validate() {
   const ok = B.service && B.day && B.slot != null && $('#fName').value.trim().length >= 2 && $('#fPhone').value.replace(/\D/g, '').length >= 9;
   $('#confirmBtn').disabled = !ok;
+  $('#mbConfirm').disabled = !ok;
   return ok;
 }
 ['#fName', '#fPhone'].forEach((s) => $(s).addEventListener('input', validate));
@@ -375,16 +366,18 @@ const msg = (text, ok = false) => { const m = $('#formMsg'); m.textContent = tex
 $('#bookForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!validate()) return;
-  const btn = $('#confirmBtn');
-  btn.disabled = true; msg('');
-  btn.querySelector('span').textContent = 'لحظة...';
+  const btns = [$('#confirmBtn'), $('#mbConfirm')];
+  const labels = btns.map((b) => b.querySelector('span').textContent);
+  btns.forEach((b) => { b.disabled = true; b.querySelector('span').textContent = 'لحظة...'; });
+  msg('');
   const res = await store.createBooking({
     service_id: B.service.id, day: B.day, start_min: B.slot,
     name: $('#fName').value, phone: $('#fPhone').value, note: $('#fNote').value,
   });
-  btn.querySelector('span').textContent = 'ثبّت الحجز';
+  btns.forEach((b, i) => { b.querySelector('span').textContent = labels[i]; });
   if (!res?.ok) {
     msg(errText(res?.error));
+    if (window.innerWidth <= 960) $('#formMsg').scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
     if (res?.error === 'SLOT_TAKEN' || res?.error === 'TOO_LATE') {
       await refreshBusy(); B.slot = null; renderSlots(); setTicket('tTime', 'اختار ساعة');
     }
@@ -397,7 +390,9 @@ $('#bookForm').addEventListener('submit', async (e) => {
   const stamp = $('#stamp');
   stamp.classList.remove('on'); void stamp.offsetWidth; stamp.classList.add('on');
   await refreshBusy();
-  setTimeout(() => showDone(bk), reduced ? 0 : 900);
+  renderBoard();
+  const ticketShown = $('#ticket').offsetParent !== null;
+  setTimeout(() => showDone(bk), reduced || !ticketShown ? 0 : 900);
 });
 
 function showDone(bk) {
@@ -429,7 +424,7 @@ function resetBooking() {
   $('#copyCode').innerHTML = icon('copy');
   setTicket('tTime', 'اختار ساعة');
   msg('');
-  renderSlots(); validate();
+  renderSlots(); validate(); renderBoard();
 }
 
 function downloadIcs(bk) {
@@ -464,6 +459,67 @@ try {
   if (last?.code) { $('#cCode').value = last.code; $('#cPhone').value = last.phone || ''; }
 } catch {}
 
+// ============================================================ أقرب دور فاضي (لوحة قلّابة)
+function nextFree(svc) {
+  const now = nowIn(S.tz);
+  for (let i = 0; i <= horizon; i++) {
+    const d = addDays(now.day, i);
+    const s = buildSlots(S, d, svc.duration_min, B.busy).find((x) => x.state === 'free');
+    if (s) return { day: d, start: s.start, offset: i };
+  }
+  return null;
+}
+
+let boardNext = null;
+let flapTimers = [];
+function setFlaps(text) {
+  const box = $('#flaps');
+  const chars = [...text];
+  if (box.children.length !== chars.length) {
+    box.innerHTML = chars.map((c) => `<span class="flap${c === ':' ? ' sep' : ''}">${c === ':' ? ':' : ' '}</span>`).join('');
+  }
+  flapTimers.forEach(clearInterval); flapTimers = [];
+  [...box.children].forEach((el, i) => {
+    const want = chars[i];
+    if (want === ':' || want === ' ' || reduced) { el.textContent = want; return; }
+    let n = 6 + i * 3;
+    const t = setInterval(() => {
+      el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick');
+      el.textContent = n <= 0 ? want : String(Math.floor(Math.random() * 10));
+      if (n-- <= 0) clearInterval(t);
+    }, 70);
+    flapTimers.push(t);
+  });
+}
+
+function renderBoard() {
+  const svc = B.service || [...data.services].sort((a, b) => a.duration_min - b.duration_min)[0];
+  const take = $('#boardTake');
+  if (!svc) { $('#boardDay').textContent = 'ما في خدمات متاحة حالياً.'; take.disabled = true; return; }
+  $('#boardFor').textContent = `لـ${svc.name}`;
+  const nx = nextFree(svc);
+  const key = nx ? `${svc.id}|${nx.day}|${nx.start}` : `${svc.id}|none`;
+  if (key === boardNext) return;
+  boardNext = key;
+  if (!nx) {
+    setFlaps('--:--'); $('#boardAp').textContent = '';
+    $('#boardDay').textContent = 'ما في أوقات فاضية بالأيام الجاية.'; take.disabled = true; return;
+  }
+  const h = Math.floor(nx.start / 60), m = nx.start % 60, h12 = ((h + 11) % 12) + 1;
+  setFlaps(`${String(h12).padStart(2, ' ')}:${String(m).padStart(2, '0')}`);
+  $('#boardAp').textContent = h < 12 ? 'ص' : 'م';
+  $('#boardDay').textContent = nx.offset === 0 ? 'اليوم' : nx.offset === 1 ? `بكرا، ${fmtDayLong(nx.day)}` : fmtDayLong(nx.day);
+  take.disabled = false;
+  take.onclick = () => {
+    if (!B.service) selectService(svc.id);
+    selectDay(nx.day);
+    const b = $(`#slots .slot[data-start="${nx.start}"]`);
+    b?.click();
+    $('#stepInfo').scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+    setTimeout(() => $('#fName').focus({ preventScroll: true }), reduced ? 0 : 500);
+  };
+}
+
 // ============================================================ تشغيل
 renderMenu();
 renderHours();
@@ -473,9 +529,29 @@ renderServices();
 renderDays();
 await refreshBusy();
 if (B.service) renderSlots();
+setTicket('tService', $('#tService').textContent);
+
+// الحجز من دليل الأرقام: بيكتب الرقم بالملاحظة
+initGuard({
+  reduced,
+  onUse(g) {
+    $('#fNote').value = g.mm ? `الجوانب على رقم ${g.n} (${g.mm} ملم)` : 'الجوانب سكن (على الجلد)';
+    $('#book').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+  },
+});
+
+// اللوحة القلّابة بتشتغل أول ما توصلها
+new IntersectionObserver((es, o) => {
+  if (es.some((e) => e.isIntersecting)) { o.disconnect(); renderBoard(); }
+}, { threshold: 0.4 }).observe($('#board'));
+
+// الشريط السفلي بيظهر بس وإنت بقسم الحجز
+new IntersectionObserver((es) => {
+  for (const e of es) document.body.classList.toggle('mbar-on', e.isIntersecting);
+}, { rootMargin: '-35% 0px -35% 0px' }).observe($('#bookForm'));
 
 // تحديث الأوقات المحجوزة كل 30 ثانية ولما يرجع الزبون للصفحة
-const syncBusy = async () => { await refreshBusy(); renderSlots(); };
+const syncBusy = async () => { await refreshBusy(); renderSlots(); if (boardNext) renderBoard(); };
 setInterval(() => { if (!document.hidden && B.day) syncBusy(); }, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && B.day) syncBusy(); });
 onScroll();
