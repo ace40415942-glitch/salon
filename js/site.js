@@ -194,6 +194,8 @@ function renderHours() {
       <td>${off ? 'مسكّر' : `${fmtClock(hm(h.open))} - ${fmtClock(hm(h.close))}`}</td></tr>`;
   }).join('');
 
+  const th = hoursFor(S, now.day);
+  $('#footToday').textContent = th ? `اليوم من ${fmtClock(th.open)} لحد ${fmtClock(th.close)}` : 'اليوم مسكّر';
   const st = $('#openStatus');
   const hrs = hoursFor(S, now.day);
   st.hidden = false;
