@@ -9,7 +9,7 @@ const money = (n) => `₪${Number(n || 0).toLocaleString('en-US', { maximumFract
 
 hydrateIcons();
 
-let PIN = sessionStorage.getItem('hossam-pin') || '';
+let PIN = sessionStorage.getItem('ace404-pin') || '';
 let S = { ...DEFAULT_SETTINGS };
 let services = [];
 let bookings = [];
@@ -35,12 +35,12 @@ $('#loginForm').addEventListener('submit', async (e) => {
   const pin = $('#pin').value.trim();
   const res = await store.admin.checkPin(pin);
   if (!res?.ok) { $('#loginMsg').textContent = errText(res?.error); return; }
-  PIN = pin; sessionStorage.setItem('hossam-pin', pin);
+  PIN = pin; sessionStorage.setItem('ace404-pin', pin);
   boot();
 });
 
 function logout() {
-  PIN = ''; sessionStorage.removeItem('hossam-pin');
+  PIN = ''; sessionStorage.removeItem('ace404-pin');
   $('#app').hidden = true; $('#login').hidden = false; $('#pin').value = '';
 }
 $('#logout').addEventListener('click', logout);
@@ -99,7 +99,7 @@ function waLink(phone, b) {
   let d = String(phone || '').replace(/\D/g, '');
   if (!d) return '';
   if (d.startsWith('0')) d = '972' + d.slice(1);
-  const text = `مرحبا ${b.customer_name}، تذكير بدورك بصالون حسام ${fmtDayLong(b.day)} الساعة ${fmtClock(b.start_min)}. كود الحجز ${b.code}`;
+  const text = `مرحبا ${b.customer_name}، تذكير بدورك بصالون ACE404 ${fmtDayLong(b.day)} الساعة ${fmtClock(b.start_min)}. كود الحجز ${b.code}`;
   return `https://wa.me/${d}?text=${encodeURIComponent(text)}`;
 }
 
@@ -336,7 +336,7 @@ $('#pinForm').addEventListener('submit', async (e) => {
   if (a !== b) { m.textContent = 'الرمزين مش متطابقين.'; return; }
   const res = await call('changePin', a);
   if (!res.ok) { m.textContent = errText(res.error); return; }
-  PIN = a; sessionStorage.setItem('hossam-pin', a);
+  PIN = a; sessionStorage.setItem('ace404-pin', a);
   $('#newPin').value = $('#newPin2').value = '';
   m.textContent = ''; toast('تغيّر الرمز');
 });

@@ -156,9 +156,9 @@ try {
   $('#priceList').innerHTML = `<li class="form-msg">ما قدرنا نحمّل الأسعار هلّق. حدّث الصفحة بعد شوي.</li>`;
 }
 const S = data.settings;
-if (store.mode === 'local' && !sessionStorage.getItem('hossam-demo-hidden')) {
+if (store.mode === 'local' && !sessionStorage.getItem('ace404-demo-hidden')) {
   $('#demoBar').hidden = false;
-  $('#demoBar button').addEventListener('click', () => { $('#demoBar').hidden = true; try { sessionStorage.setItem('hossam-demo-hidden', '1'); } catch {} });
+  $('#demoBar button').addEventListener('click', () => { $('#demoBar').hidden = true; try { sessionStorage.setItem('ace404-demo-hidden', '1'); } catch {} });
 }
 
 // ---------- الأسعار
@@ -387,7 +387,7 @@ $('#bookForm').addEventListener('submit', async (e) => {
     return;
   }
   const bk = res.booking;
-  try { localStorage.setItem('hossam-last-booking', JSON.stringify({ ...bk, phone: $('#fPhone').value })); } catch {}
+  try { localStorage.setItem('ace404-last-booking', JSON.stringify({ ...bk, phone: $('#fPhone').value })); } catch {}
   $('#ticketNo').textContent = bk.code;
   const stamp = $('#stamp');
   stamp.classList.remove('on'); void stamp.offsetWidth; stamp.classList.add('on');
@@ -402,7 +402,7 @@ function showDone(bk) {
   $('#doneWhen').textContent = `${fmtDayLong(bk.day)}، الساعة ${fmtClock(bk.start_min)}`;
   $('#doneCode').textContent = bk.code;
   const wa = waNumber(S.whatsapp || S.phone);
-  const text = `مرحبا، حجزت دور بصالون حسام\nالخدمة: ${bk.service_name}\nاليوم: ${fmtDayLong(bk.day)}\nالساعة: ${fmtClock(bk.start_min)}\nالاسم: ${bk.customer_name}\nكود الحجز: ${bk.code}`;
+  const text = `مرحبا، حجزت دور بصالون ACE404\nالخدمة: ${bk.service_name}\nاليوم: ${fmtDayLong(bk.day)}\nالساعة: ${fmtClock(bk.start_min)}\nالاسم: ${bk.customer_name}\nكود الحجز: ${bk.code}`;
   const waBtn = $('#doneWa');
   waBtn.hidden = !wa;
   if (wa) waBtn.href = `https://wa.me/${wa}?text=${encodeURIComponent(text)}`;
@@ -433,16 +433,16 @@ function downloadIcs(bk) {
   const p = (n) => String(n).padStart(2, '0');
   const dt = (min) => `${bk.day.replace(/-/g, '')}T${p(Math.floor(min / 60))}${p(min % 60)}00`;
   const ics = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Hossam Barber//AR', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
-    `UID:${bk.code}@hossam-barber`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ACE404 Barber//AR', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
+    `UID:${bk.code}@ace404-barber`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
     `DTSTART;TZID=${S.tz || 'Asia/Jerusalem'}:${dt(bk.start_min)}`, `DTEND;TZID=${S.tz || 'Asia/Jerusalem'}:${dt(bk.end_min)}`,
-    `SUMMARY:صالون حسام - ${bk.service_name}`, `DESCRIPTION:كود الحجز ${bk.code}`,
-    S.address ? `LOCATION:${S.address}` : '', 'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:دورك بصالون حسام بعد ساعة', 'END:VALARM',
+    `SUMMARY:صالون ACE404 - ${bk.service_name}`, `DESCRIPTION:كود الحجز ${bk.code}`,
+    S.address ? `LOCATION:${S.address}` : '', 'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:دورك بصالون ACE404 بعد ساعة', 'END:VALARM',
     'END:VEVENT', 'END:VCALENDAR',
   ].filter(Boolean).join('\r\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-  a.download = `hossam-${bk.code}.ics`;
+  a.download = `ace404-${bk.code}.ics`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
@@ -457,7 +457,7 @@ $('#cancelForm').addEventListener('submit', async (e) => {
   if (res?.ok) { await refreshBusy(); renderSlots(); }
 });
 try {
-  const last = JSON.parse(localStorage.getItem('hossam-last-booking'));
+  const last = JSON.parse(localStorage.getItem('ace404-last-booking'));
   if (last?.code) { $('#cCode').value = last.code; $('#cPhone').value = last.phone || ''; }
 } catch {}
 

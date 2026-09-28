@@ -4,6 +4,7 @@ body.admin { background: var(--ink); }
 
 .login { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: var(--gut); }
 .login-card { width: min(380px, 100%); display: grid; gap: 16px; text-align: center; }
+.login-logo { display: block; width: 72px; height: auto; margin: 0 auto 10px; }
 .login-mark { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: 84px; line-height: 1; }
 .login-sub { margin: -6px 0 12px; font-family: var(--f-accent); color: var(--brass); font-size: 22px; }
 .login-card .field { text-align: start; }

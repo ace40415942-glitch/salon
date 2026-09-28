@@ -80,13 +80,13 @@ function remote() {
 
 // ---------------------------------------------------------------- local (تجريبي)
 
-const LS_KEY = 'hossam-salon-v1';
+const LS_KEY = 'ace404-salon-v1';
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
 const code6 = () => Array.from({ length: 6 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
 const cleanPhone = (p) => String(p || '').replace(/[^0-9+]/g, '');
 
 export const DEFAULT_SETTINGS = {
-  salon_name: 'صالون حسام',
+  salon_name: 'صالون ACE404',
   tagline: 'قصّات شبابية بإيد وحدة ثابتة',
   phone: '', whatsapp: '', instagram: '', tiktok: '', address: '', maps_url: '',
   tz: 'Asia/Jerusalem', slot_step: 30, horizon_days: 14, min_notice_min: 30, max_active_per_phone: 2,

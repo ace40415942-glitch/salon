@@ -1,5 +1,5 @@
 /* ============================================================
-   صالون حسام | الواجهة
+   ACE404 Barber | الواجهة
    لغة بصرية: فحمي دافي + عاجي + نحاسي واحد. خطوط: Alexandria للعناوين،
    Aref Ruqaa للكلمة المميزة (بدل الإيطالي الذهبي)، IBM Plex Sans Arabic للنص.
    ============================================================ */
@@ -151,6 +151,11 @@ body.is-intro main, body.is-intro .foot, body.is-intro .nav { visibility: hidden
 body.is-docked .nav { transform: none; }
 .brand { font-family: var(--f-display); font-weight: 900; font-size: 22px; text-decoration: none; display: flex; align-items: baseline; gap: 8px; line-height: 1; }
 .brand small { font-family: var(--f-body); font-size: 9px; letter-spacing: .35em; color: var(--brass); font-weight: 600; }
+.brand-logo { height: 1.25em; width: auto; align-self: center; flex: none; }
+.brand > span, .foot-brand > span, .ticket-brand > span { letter-spacing: .02em; }
+.ticket-brand { display: inline-flex; align-items: center; gap: 8px; }
+.intro-logo { display: block; width: clamp(64px, 9vw, 110px); height: auto; margin: 0 auto 14px; opacity: 0; transform: translateY(10px) scale(.9); filter: blur(10px); transition: opacity 1s var(--ease-out), transform 1.2s var(--ease-out), filter 1s var(--ease-out); }
+.intro.show-mark .intro-logo { opacity: 1; transform: none; filter: drop-shadow(0 3px 14px rgba(0,0,0,.85)) drop-shadow(0 0 2px rgba(0,0,0,.9)); }
 .nav-links { display: flex; gap: 22px; margin-inline-start: auto; }
 .nav-links a { text-decoration: none; color: var(--muted); font-size: 15px; transition: color .25s; }
 .nav-links a:hover { color: var(--bone); }

@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>إدارة صالون حسام</title>
+  <title>إدارة ACE404 Barber</title>
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#14110f">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/ace-logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800;900&family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,7 +18,8 @@
   <!-- تسجيل الدخول -->
   <section class="login" id="login">
     <form class="login-card" id="loginForm">
-      <p class="login-mark">حسام</p>
+      <img class="login-logo" src="assets/ace-logo.png" alt="">
+      <p class="login-mark" dir="ltr">ACE404</p>
       <p class="login-sub">لوحة الإدارة</p>
       <label class="field"><span>الرمز</span><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" dir="ltr" required></label>
       <button class="btn btn-brass btn-block" type="submit"><span>ادخل</span><i data-icon="arrow-left"></i></button>
@@ -30,7 +31,7 @@
   <!-- اللوحة -->
   <div class="app" id="app" hidden>
     <header class="a-top">
-      <a class="brand" href="./" title="فتح الموقع">حسام<small>ADMIN</small></a>
+      <a class="brand" href="./" title="فتح الموقع"><img class="brand-logo" src="assets/ace-logo.png" alt=""><span dir="ltr">ACE404</span><small>ADMIN</small></a>
       <nav class="tabs" role="tablist">
         <button role="tab" data-tab="bookings" aria-selected="true"><i data-icon="calendar-event"></i><span>الحجوزات</span></button>
         <button role="tab" data-tab="services"><i data-icon="cash"></i><span>الأسعار</span></button>

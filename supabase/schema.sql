@@ -1,5 +1,5 @@
 -- ============================================================
---  صالون حسام | Supabase schema
+--  ACE404 Barber | Supabase schema
 --  نفّذ الملف كاملاً مرة وحدة من: Supabase > SQL Editor > New query > Run
 --  يمكن إعادة تنفيذه بأمان (idempotent) بدون ما يمسح الحجوزات.
 -- ============================================================
@@ -73,7 +73,7 @@ create index if not exists bookings_phone_idx on public.bookings (phone);
 -- ---------- بيانات أولية ----------
 
 insert into public.settings (id, data) values (1, jsonb_build_object(
-  'salon_name',     'صالون حسام',
+  'salon_name',     'صالون ACE404',
   'tagline',        'قصّات شبابية بإيد وحدة ثابتة',
   'phone',          '',
   'whatsapp',       '',
